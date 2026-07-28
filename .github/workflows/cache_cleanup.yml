@@ -1,0 +1,26 @@
+name: Cache File Cleanup
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup old cache
+        env:
+          GH_PAT_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
+        run: |
+          echo "Cleaning old cache files..."
+          # List files in skmovies-cache repo
+          FILES=$(curl -s -H "Authorization: Bearer $GH_PAT_TOKEN" \
+            "https://api.github.com/repos/khadimsorder1-max/skmovies-cache/git/trees/main?recursive=1" | \
+            python3 -c "
+          import sys, json
+          data = json.loads(sys.stdin.read())
+          for item in data.get('tree', []):
+              if item['type'] == 'blob' and item['path'].endswith('.json'):
+                  print(item['path'])
+          " | head -50)
+          echo "Found $(echo "$FILES" | wc -l) files"
+          echo "Done."
