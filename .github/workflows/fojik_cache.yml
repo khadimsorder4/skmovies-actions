@@ -1,0 +1,14 @@
+name: Fojik Cache Refresh
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refresh fojik
+        run: |
+          for i in 1 2 3 4 5; do
+            curl -s --max-time 60 "https://skmovies-premium.pages.dev/api/cache?src=fojik&path=latest&page=$i&refresh=1" || true
+          done
