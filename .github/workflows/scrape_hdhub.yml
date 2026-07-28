@@ -1,0 +1,14 @@
+name: Scrape HDHub Main
+on:
+  schedule:
+    - cron: '0 */8 * * *'
+  workflow_dispatch:
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scrape HDHub
+        run: |
+          for i in 1 2 3; do
+            curl -s --max-time 120 "https://skmovies-premium.pages.dev/api/hdhubmain/list?type=home&page=$i" || true
+          done
