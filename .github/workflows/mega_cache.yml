@@ -1,0 +1,22 @@
+name: Build Mega Cache
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build cache
+        env:
+          GH_PAT_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
+        run: |
+          echo "Triggering cache build..."
+          curl -s --max-time 300 "https://skmovies-premium.pages.dev/api/cache?src=mlsbd&path=latest&page=1&refresh=1" || true
+          curl -s --max-time 300 "https://skmovies-premium.pages.dev/api/cache?src=fdm&path=latest&page=1&refresh=1" || true
+          curl -s --max-time 300 "https://skmovies-premium.pages.dev/api/cache?src=hdhub4u&path=latest&page=1&refresh=1" || true
+          curl -s --max-time 300 "https://skmovies-premium.pages.dev/api/cache?src=hdhubmain&path=latest&page=1&refresh=1" || true
+          curl -s --max-time 300 "https://skmovies-premium.pages.dev/api/cache?src=fojik&path=latest&page=1&refresh=1" || true
+          curl -s --max-time 300 "https://skmovies-premium.pages.dev/api/cache?src=southfreak&path=latest&page=1&refresh=1" || true
+          curl -s --max-time 300 "https://skmovies-premium.pages.dev/api/cinedose/list?type=home&page=1" || true
+          echo "Done."
